@@ -1,3 +1,10 @@
 {
-    "PORT":8800
+    "PORT":8800,
+    "DB_Config": {
+        "Host":     "localhost",
+		"Port":     "5436",
+		"Username": "postgres",
+		"DBName":   "postgres",
+		"SSLMode":  "disable"
+    }
 }

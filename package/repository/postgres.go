@@ -7,6 +7,14 @@ import (
 	_ "github.com/lib/pq"
 )
 
+const (
+	usersTable      = "users"
+	todoListTable   = "todo_lists"
+	userListsTable  = "user_lists"
+	todoItemsTable  = "todo_items"
+	listsItemsTable = "lists_items"
+)
+
 type DBConfig struct {
 	Host     string
 	Port     string

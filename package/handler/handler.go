@@ -29,7 +29,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		authGroup.POST("/sign-in", h.signIn)
 	}
 
-	apiGroup := router.Group("/api")
+	apiGroup := router.Group("/api", h.UserIndentity)
 	{
 		listGroup := apiGroup.Group("/lists")
 		{

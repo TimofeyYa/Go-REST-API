@@ -2,6 +2,7 @@ package service
 
 import (
 	"crypto/sha1"
+	"errors"
 	"fmt"
 	todo "todo/study"
 	"todo/study/package/repository"
@@ -10,7 +11,10 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const salt = "timofey"
+const (
+	salt       = "timofey"
+	signingKey = "StrongKey"
+)
 
 type AuthService struct {
 	repo repository.Authorization
@@ -65,5 +69,25 @@ func (s *AuthService) GenerateJWT(id int) (string, error) {
 		Id: id,
 	})
 
-	return token.SignedString([]byte("StrongKey"))
+	return token.SignedString([]byte(signingKey))
+}
+
+func (s *AuthService) ParseToken(token string) (int, error) {
+	accessToken, err := jwt.ParseWithClaims(token, &loginJwt{}, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid signing method")
+		}
+
+		return []byte(signingKey), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	claims, ok := accessToken.Claims.(*loginJwt)
+	if !ok {
+		return 0, errors.New("token claims are not of type *tokenClaims")
+	}
+
+	return claims.Id, nil
 }
